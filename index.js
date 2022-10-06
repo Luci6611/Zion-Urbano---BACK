@@ -1,12 +1,9 @@
-const express = require('express')
-const app = express()
+const Server = require("./models/Server");
 
-app.get('/', function (req, res) {
-  res.json({
-    msg:"Hola mundo"
-  })
-})
+require("dotenv").config();
 
-app.listen(8080,()=>{
-    console.log("Servidor online en puerto 8080")
-})
+const server = new Server();
+
+server.listen();
+
+
