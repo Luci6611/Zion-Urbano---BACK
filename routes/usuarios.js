@@ -1,31 +1,17 @@
-const {Router} = require("express")
+const {Router} = require("express");
+const { usuariosGet, usuarioPost, usuarioDelete, usuarioPut } = require("../controllers/usuarios");
+
 
 const router =  Router();
 
 
 
-router.get("/", function (req, res) {
-    res.json({
-      msg: "peticion get-rutas",
-    });
-  });
+router.get("/", usuariosGet);
 
-  router.post("/", function (req, res) {
-      res.json({
-        msg: "peticion post",
-      });
-    });
+  router.post("/", usuarioPost );
 
-    router.put("/:id", function (req, res) {
-      res.json({
-        msg: "peticion put",
-      });
-    });
+    router.put("/:id", usuarioPut);
 
-    router.delete("/:id", function (req, res) {
-      res.json({
-        msg: "peticion delete",
-      });
-    });
+    router.delete("/:id",usuarioDelete );
 
     module.exports = router;
