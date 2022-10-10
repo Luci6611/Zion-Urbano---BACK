@@ -1,34 +1,36 @@
-const {Router} = require("express");
-const {check} = require("express-validator")
-const { usuariosGet, usuarioPost, usuarioDelete, usuarioPut } = require("../controllers/usuarios");
-const {validarCampos} = require("../middlewares/validar-campos")
-const {Role} = require("../models/role")
+const { Router } = require("express");
+const { check } = require("express-validator");
+const {
+  usuariosGet,
+  usuarioPost,
+  usuarioDelete,
+  usuarioPut,
+} = require("../controllers/usuarios");
+const { validarCampos } = require("../middlewares/validar-campos");
+const { esRoleValido, emailExiste } = require("../helpers/db-validators");
 
-
-const router =  Router();
-
-
+const router = Router();
 
 router.get("/", usuariosGet);
 
-  router.post("/",[
-    check ("email","El correo no es valido").isEmail(),
-    check ("nombre","El nombre es obligatorio").notEmpty(),
-    check("password","la contraseña debe tener minimo 6 caracteres").isLength({min:6}),
-    
-    check("role").custom(async(role="")=>{
-      const existeRole = await Role.findOne({role});  
-    
-    if(!existeRole){
-        throw new Error(`El rol ${role} no existe en la BD`);
-    }
-
+router.post(
+  "/",
+  [
+    check("nombre", "El nombre es obligatorio").notEmpty(),
+    check("password", "la contraseña debe tener minimo 6 caracteres").isLength({
+      min: 6,
     }),
-    validarCampos
-  ], usuarioPost );
+    check("email", "El correo no es valido").isEmail(),
+    check("email").custom(emailExiste),
+    check("role").custom(esRoleValido),
 
-    router.put("/:id", usuarioPut);
+    validarCampos,
+  ],
+  usuarioPost
+);
 
-    router.delete("/:id",usuarioDelete );
+router.put("/:id", usuarioPut);
 
-    module.exports = router;
+router.delete("/:id", usuarioDelete);
+
+module.exports = router;
