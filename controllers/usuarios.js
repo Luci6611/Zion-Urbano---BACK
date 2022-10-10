@@ -6,10 +6,19 @@ const bcrypt = require('bcryptjs');
 const Usuario = require("../models/usuario")
 
 //GET
-const usuariosGet = (req=request,res=response) => {
-    res.json({
-      msg: "peticion get-controllers",
-    });
+const usuariosGet = async (req=request,res=response) => {
+
+ // paginacion usuarios
+ const {limite =6, desde=0} = req.query;
+
+ const usuarios = await Usuario.find({estado:true}).skip(desde).limit(limite);
+
+ const total = await Usuario.countDocuments({estado:true});
+ 
+   res.json({
+     total,
+     usuarios,
+   });
   }
   //GET
   
@@ -20,8 +29,8 @@ const usuarioPost = async (req = request, res = response) => {
 
   const usuario = new Usuario({ nombre, email, password, role });
 
-  
 
+   //encriptar contraseña
   const salt = bcrypt.genSaltSync();
   usuario.password = bcrypt.hashSync(password, salt);
 
@@ -36,22 +45,35 @@ const usuarioPost = async (req = request, res = response) => {
 //POST
 
 //PUT
- const usuarioPut = (req=request,res=response) => {
+ const usuarioPut = async (req=request,res=response) => {
     const {id} = req.params;
+    const {_id,password,email,...resto} =req.body;
+    if(password){  
+    //encriptar contraseña
+  const salt = bcrypt.genSaltSync();
+  resto.password = bcrypt.hashSync(password, salt);
+    }
+    
+    const usuario = await Usuario.findByIdAndUpdate(id,resto,{new:true})
+
     res.json({
-      msg: "peticion put- controllers",
-      id
+      msg: "usuario actualizado",
+      usuario,
     });
   }
 //PUT
 //DELETE
-  const usuarioDelete =  (req=request,res=response) =>  {
-    const {id} = req.params;
+
+const usuarioDelete = async (req, res)=> {
+  const { id } = req.params;
+  // inactivar usuario
+  const usuarioBorrado = await Usuario.findByIdAndUpdate(id,{estado:false},{new:true});
     res.json({
-      msg: "peticion delete- controladores",
-      id
+      msg:"usuario inactivado correctamente de la base de datos", 
+      usuarioBorrado,
+     
     });
-  }
+    }
   //DELETE 
   module.exports ={
     usuariosGet,
