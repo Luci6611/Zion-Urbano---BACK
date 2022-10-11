@@ -32,10 +32,10 @@ const login = async (req = request, res = response) => {
     }
 
     //generar un token
+    
 
     res.json({
-      email,
-      password,
+      usuario
     });
   } catch (error) {
     console.log(error);
