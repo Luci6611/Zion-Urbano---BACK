@@ -16,7 +16,7 @@ const router = Router();
 router.get("/",[
   validarJWT,
   esAdminRole,
-  validarCampos
+ 
 ], usuariosGet);
 
 router.post(
