@@ -29,7 +29,7 @@ const usuario = await Usuario.findById(userId);
             msg:"El token ingresado pertenece a un usuario inactivado"
         })
     }
-
+    req.usuario = usuario;
 
     next()
 
