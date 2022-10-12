@@ -66,13 +66,13 @@ const usuarioPost = async (req = request, res = response) => {
 
 const usuarioDelete = async (req, res)=> {
   const { id } = req.params;
-  const usuarioAutentificado= req.usuario
+
   // inactivar usuario
   const usuarioBorrado = await Usuario.findByIdAndUpdate(id,{estado:false},{new:true});
     res.json({
       msg:"usuario inactivado correctamente de la base de datos", 
       usuarioBorrado,
-      usuarioAutentificado
+      
      
     });
     }

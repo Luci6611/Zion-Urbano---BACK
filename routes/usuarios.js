@@ -13,7 +13,11 @@ const { esRoleValido, emailExiste, idExiste } = require("../helpers/db-validator
 
 const router = Router();
 
-router.get("/", usuariosGet);
+router.get("/",[
+  validarJWT,
+  esAdminRole,
+  validarCampos
+], usuariosGet);
 
 router.post(
   "/",
@@ -32,6 +36,7 @@ router.post(
 );
 
 router.put("/:id",[
+  validarJWT,
   check("id","No es un id de mongo valido").isMongoId(),
   check("id").custom(idExiste),
   validarCampos
