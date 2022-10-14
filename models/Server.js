@@ -1,4 +1,5 @@
 const express = require("express");
+const cors = require('cors')
 const {dbConnection} = require ("../database/config");
 class Server {
   constructor() {
@@ -23,6 +24,8 @@ class Server {
     }
   
   middleware() {
+    //cors
+    this.app.use(cors())
     // leer el body
     this.app.use(express.json());
   }
